@@ -4,19 +4,22 @@ class Conexion {
     private $db_name = "sistema_login";
     private $username = "root";
     private $password = "";
-    protected $pdo;
+    protected $conn;
 
     public function conectar() {
-        if ($this->pdo === null) {
-            try {
-                $dns = "mysql:host={$this->host};dbname={$this->db_name};charset=utf8";
-                $this->pdo = new PDO($dns, $this->username, $this->password);
-                $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
-                die("Error de conexión: " . $e->getMessage());
+        if ($this->conn === null) {
+            // Instancia del objeto mysqli (POO)
+            $this->conn = new mysqli($this->host, $this->username, $this->password, $this->db_name);
+
+            // Verificar errores de conexión
+            if ($this->conn->connect_error) {
+                die("Error de conexión: " . $this->conn->connect_error);
             }
+
+            // Establecer el juego de caracteres
+            $this->conn->set_charset("utf8");
         }
-        return $this->pdo;
+        return $this->conn;
     }
 }
 ?>
