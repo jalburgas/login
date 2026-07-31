@@ -1,0 +1,34 @@
+Aquí tienes un resumen rápido y estructurado de todo lo que hemos construido hasta ahora para tu sistema de Login en PHP Orientado a Objetos (POO) con mysqli y Procedimientos Almacenados:
+1. Base de Datos (MySQL)
+
+    Tabla usuarios: Almacena los campos id, usuario, password (con espacio suficiente de 255 caracteres para contraseñas encriptadas) y email.
+
+    Procedimiento Almacenado (sp_obtener_usuario_login): Recibe el nombre de usuario por parámetro y devuelve sus datos (id, usuario, password) para evitar inyecciones SQL directas.
+
+2. Arquitectura de Clases en PHP
+
+El código quedó dividido bajo el principio de responsabilidad única en tres clases orientadas a objetos:
+
+    Conexion (Conexion.php):
+
+        Encapsula las credenciales de la base de datos.
+
+        Crea y gestiona la instancia del objeto nativo mysqli.
+
+    Usuario (Usuario.php):
+
+        Contiene los atributos del usuario y sus getters.
+
+        autenticar($usuarioInput, $passwordInput): Ejecuta la llamada al procedimiento almacenado (CALL sp_obtener_usuario_login(?)), vincula los parámetros de forma segura (bind_param), valida la contraseña con password_verify() y gestiona la limpieza de buffers en mysqli con next_result().
+
+    SessionManager (SessionManager.php):
+
+        Encapsula el manejo de $_SESSION para iniciar, verificar y cerrar sesiones de forma limpia.
+
+3. Seguridad Implementada
+
+    Contraseñas seguras: Verificación mediante el algoritmo BCRYPT nativo de PHP (password_verify).
+
+    Inyección SQL: Prevenida al usar Prepared Statements (prepare + bind_param) sobre el procedimiento almacenado.
+
+    Separación de responsabilidades: Código modular, mantenible y reutilizable en otros componentes de la aplicación.
